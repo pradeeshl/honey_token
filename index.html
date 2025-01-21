@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honey Token Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        .form-container input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9e9e9;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Honey Token Generator</h1>
+    
+    <div class="form-container">
+        <h2>Generate a Custom Honey Token</h2>
+        <form id="honeyTokenForm">
+            <input type="text" id="user_id" placeholder="Enter User ID" required>
+            <input type="text" id="sensitive_area" placeholder="Enter Sensitive Area (optional)">
+            <button type="submit">Generate Token</button>
+        </form>
+    </div>
+    
+    <div class="result" id="result">
+        <h3>Generated Honey Token:</h3>
+        <pre id="js_token_output"></pre>
+    </div>
+
+    <script>
+        document.getElementById('honeyTokenForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const userId = document.getElementById('user_id').value;
+            const sensitiveArea = document.getElementById('sensitive_area').value || 'default_area';
+
+            const requestBody = {
+                user_id: userId,
+                sensitive_area: sensitiveArea
+            };
+
+            try {
+                const response = await fetch('http://localhost:5000/api/generate_canary_token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('js_token_output').textContent = data.js_token;
+                } else {
+                    alert('Error generating honey token');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error connecting to the server');
+            }
+        });
+    </script>
+
+</body>
+</html>
