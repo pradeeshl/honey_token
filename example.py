@@ -1,6 +1,7 @@
 import requests
 
-# Slack configuration
+
+
 
 def send_test_message():
     url = "https://slack.com/api/chat.postMessage"
